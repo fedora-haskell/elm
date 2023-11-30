@@ -1,0 +1,49 @@
+--- compiler-2f6dd29258e880dbb7effd57a829a0470d8da48b/terminal/src/Develop.hs~	2023-11-01 21:00:26.000000000 +0545
++++ compiler-2f6dd29258e880dbb7effd57a829a0470d8da48b/terminal/src/Develop.hs	2023-11-30 11:09:52.265381981 +0545
+@@ -25,7 +25,7 @@
+ import qualified Elm.Details as Details
+ import qualified Develop.Generate.Help as Help
+ import qualified Develop.Generate.Index as Index
+-import qualified Develop.StaticFiles as StaticFiles
++-- import qualified Develop.StaticFiles as StaticFiles
+ import qualified Generate.Html as Html
+ import qualified Generate
+ import qualified Reporting
+@@ -170,15 +170,15 @@
+ 
+ 
+ serveAssets :: Snap ()
+-serveAssets =
+-  do  path <- getSafePath
+-      case StaticFiles.lookup path of
+-        Nothing ->
+-          pass
+-
+-        Just (content, mimeType) ->
+-          do  modifyResponse (setContentType (mimeType <> ";charset=utf-8"))
+-              writeBS content
++serveAssets = pass
++  -- do  path <- getSafePath
++  --     case StaticFiles.lookup path of
++  --       Nothing ->
++  --         pass
++
++  --       Just (content, mimeType) ->
++  --         do  modifyResponse (setContentType (mimeType <> ";charset=utf-8"))
++  --             writeBS content
+ 
+ 
+ 
+--- compiler-2f6dd29258e880dbb7effd57a829a0470d8da48b/elm.cabal~	2023-11-01 21:00:26.000000000 +0545
++++ compiler-2f6dd29258e880dbb7effd57a829a0470d8da48b/elm.cabal	2023-11-30 11:13:40.153031064 +0545
+@@ -71,8 +71,8 @@
+         -- from terminal/
+         Develop.Generate.Help
+         Develop.Generate.Index
+-        Develop.StaticFiles
+-        Develop.StaticFiles.Build
++        -- Develop.StaticFiles
++        -- Develop.StaticFiles.Build
+ 
+         -- from builder/
+         Build

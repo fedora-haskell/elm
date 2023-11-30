@@ -3,8 +3,8 @@
 
 %global gitsnap 2f6dd29258e880dbb7effd57a829a0470d8da48b
 
-%global ghc_major 9.4
-%global ghc_name ghc%{ghc_major}
+#%%global ghc_major 9.4
+#%%global ghc_name ghc%%{?ghc_major}
 
 %global ghc_without_dynamic 1
 %global ghc_without_shared 1
@@ -26,13 +26,15 @@ Url:            https://elm-lang.org/
 #Source0:        https://github.com/elm/compiler/archive/refs/tags/%%{version}.tar.gz#/compiler-%%{version}.tar.gz
 Source0:        https://github.com/elm/compiler/archive/%{gitsnap}.tar.gz
 # End cabal-rpm sources
+# https://github.com/elm/compiler/issues/2318
+Patch0:         terminal-disable-StaticFiles.patch
 
 # Begin cabal-rpm deps:
-BuildRequires:  %{ghc_name}-Cabal-devel
 BuildRequires:  ghc-rpm-macros
 %if %{defined ghc_name}
 BuildRequires:  %{ghc_name}-devel
 %else
+BuildRequires:  ghc-Cabal-devel
 BuildRequires:  ghc-HTTP-devel
 BuildRequires:  ghc-SHA-devel
 BuildRequires:  ghc-ansi-terminal-devel
@@ -82,6 +84,7 @@ make Elm developers happy and productive.
 # Begin cabal-rpm setup:
 %setup -q -n compiler-%{gitsnap}
 # End cabal-rpm setup
+%patch -P0 -p1 -b .orig
 
 
 %build
@@ -100,7 +103,7 @@ make Elm developers happy and productive.
 mkdir -p %{buildroot}%{_bindir}
 %if 0%{?fedora} || 0%{?rhel} >= 9
 %ghc_set_gcc_flags
-%cabal_install install -w ghc-%{ghc_major} --install-method=copy --enable-executable-stripping --installdir=%{buildroot}%{_bindir}
+%cabal_install install %{?ghc_name:-w ghc-%{ghc_major}} --install-method=copy --enable-executable-stripping --installdir=%{buildroot}%{_bindir}
 %else
 for i in .cabal-sandbox/bin/*; do
 strip -s -o %{buildroot}%{_bindir}/$(basename $i) $i
