@@ -74,6 +74,8 @@ BuildRequires:  cabal-install > 1.18
 BuildRequires:  ghc-pretty-devel
 %endif
 # End cabal-rpm deps
+Requires:       nodejs
+
 
 %description
 This includes commands like `elm make`, `elm repl`, and many others for helping
